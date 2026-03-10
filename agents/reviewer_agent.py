@@ -1,7 +1,7 @@
 import json
 from models.schemas import IntakeData, ListingDraft, ReviewOutput
 from services.gemini_service import get_client
-
+from services.json_utils import clean_json_text
 
 SYSTEM_PROMPT = """
 You are a senior e-commerce listing editor.
@@ -61,12 +61,14 @@ Draft description:
     )
 
     raw_text = response.text.strip()
+    cleaned_text = clean_json_text(raw_text)
 
     try:
-        data = json.loads(raw_text)
+        data = json.loads(cleaned_text)
     except json.JSONDecodeError as e:
-        raise ValueError(f"Reviewer did not return valid JSON.\nRaw output:\n{raw_text}") from e
-
+        raise ValueError(
+            f"Reviewer did not return valid JSON.\nRaw output:\n{raw_text}"
+        ) from e
     reviewed = ReviewOutput(**data)
 
     if len(reviewed.improved_bullet_points) != 4:
