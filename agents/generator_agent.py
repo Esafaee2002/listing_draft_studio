@@ -1,5 +1,5 @@
 import json
-from models.schemas import IntakeData, ListingDraft
+from models.schemas import IntakeData, VisionOutput, ListingDraft
 from services.gemini_service import get_client
 
 
@@ -34,8 +34,7 @@ Required JSON format:
 }
 """.strip()
 
-
-def generate_listing(intake: IntakeData) -> ListingDraft:
+def generate_listing(intake: IntakeData, vision: VisionOutput) -> ListingDraft:
     client = get_client()
 
     user_prompt = f"""
@@ -47,6 +46,12 @@ Key features:
 2. {intake.key_features[1]}
 3. {intake.key_features[2]}
 4. {intake.key_features[3]}
+
+Visual description:
+{vision.visual_description}
+
+Observed attributes:
+{", ".join(vision.observed_attributes) if vision.observed_attributes else "None"}
 """.strip()
 
     response = client.models.generate_content(

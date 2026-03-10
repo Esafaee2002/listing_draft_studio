@@ -2,3 +2,4 @@ google-adk
 python-dotenv
 pydantic 
 dotenv
+google-generativeai
