@@ -37,7 +37,6 @@ Required JSON format:
 def generate_listing(
     intake: IntakeData,
     vision: VisionOutput,
-    research: MarketResearchOutput,
 ) -> ListingDraft:
     client = get_client()
 
@@ -56,18 +55,6 @@ Visual description:
 
 Observed attributes:
 {", ".join(vision.observed_attributes) if vision.observed_attributes else "None"}
-
-Market research keywords:
-{", ".join(research.top_keywords)}
-
-Common feature patterns:
-{", ".join(research.common_features)}
-
-Market style notes:
-{", ".join(research.market_style_notes)}
-
-Relevant competitor titles:
-{chr(10).join(f"- {title}" for title in research.most_relevant_titles)}
 """.strip()
 
     response = client.models.generate_content(

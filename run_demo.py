@@ -1,6 +1,5 @@
 from agents.intake_agent import collect_user_input
 from agents.vision_agent import analyze_image
-from agents.market_research_agent import run_market_research
 from agents.generator_agent import generate_listing
 from agents.reviewer_agent import review_listing
 
@@ -10,34 +9,32 @@ def main():
 
     intake = collect_user_input()
     vision = analyze_image(intake)
-    research = run_market_research(intake, vision)
-    draft = generate_listing(intake, vision, research)
+    draft = generate_listing(intake, vision)
     reviewed = review_listing(intake, draft)
+
+    print("\n=== INTAKE OUTPUT ===\n")
+    print(f"Product name: {intake.product_name}\n")
+
+    print("Key features:")
+    for i, feature in enumerate(intake.key_features, start=1):
+        print(f"{i}. {feature}")
+
+    print("\nImage paths:")
+    if intake.image_paths:
+        for path in intake.image_paths:
+            print(f"- {path}")
+    else:
+        print("No image provided.")
 
     print("\n=== VISION OUTPUT ===\n")
     print(f"Visual description:\n{vision.visual_description}\n")
 
     print("Observed attributes:")
-    for i, attr in enumerate(vision.observed_attributes, start=1):
-        print(f"{i}. {attr}")
-
-    print("\n=== MARKET RESEARCH OUTPUT ===\n")
-
-    print("Top keywords:")
-    for kw in research.top_keywords:
-        print(f"- {kw}")
-
-    print("\nCommon features:")
-    for feature in research.common_features:
-        print(f"- {feature}")
-
-    print("\nMarket style notes:")
-    for note in research.market_style_notes:
-        print(f"- {note}")
-
-    print("\nMost relevant titles:")
-    for title in research.most_relevant_titles:
-        print(f"- {title}")
+    if vision.observed_attributes:
+        for i, attr in enumerate(vision.observed_attributes, start=1):
+            print(f"{i}. {attr}")
+    else:
+        print("No observed attributes.")
 
     print("\n=== GENERATED DRAFT ===\n")
     print(f"TITLE:\n{draft.title}\n")
